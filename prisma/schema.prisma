@@ -1,0 +1,276 @@
+// ADEARA DEVELOPMENT — Full database schema
+//
+// Development: SQLite (file-based)
+// Production (Vercel): PostgreSQL (Vercel Postgres, Neon, or Supabase)
+//
+// The provider is automatically swapped by `prisma/switch-provider.mjs`
+// which runs as part of the build pipeline based on DATABASE_PROVIDER env var.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============ AUTH ============
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("admin") // admin | editor
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  activityLogs       ActivityLog[]
+  updatedSettings   SiteSetting[] @relation("SiteSettingUpdater")
+}
+
+// ============ SITE SETTINGS / CMS ============
+model SiteSetting {
+  id              String   @id @default(cuid())
+  key             String   @unique
+  value           String   // stringified JSON when complex
+  category        String   @default("general")
+  updatedAt       DateTime @updatedAt
+  updatedById     String?
+  updater         AdminUser? @relation("SiteSettingUpdater", fields: [updatedById], references: [id])
+}
+
+// ============ NAVIGATION ============
+model NavItem {
+  id        String  @id @default(cuid())
+  label     String
+  href      String
+  order     Int    @default(0)
+  visible   Boolean @default(true)
+  isButton  Boolean @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+// ============ HERO / HOMEPAGE SECTIONS ============
+model HeroSection {
+  id           String  @id @default(cuid())
+  heading      String
+  description  String
+  primaryBtn   String  @default("Explore Our Services")
+  primaryHref  String  @default("/services")
+  secondaryBtn String  @default("Start Your Project")
+  secondaryHref String @default("/order")
+  bgImage      String?
+  bgVideo      String?
+  textAlign    String  @default("left")
+  animation    String  @default("fade-up")
+  visible      Boolean @default(true)
+  updatedAt    DateTime @updatedAt
+}
+
+model AboutPreview {
+  id          String  @id @default(cuid())
+  heading     String  @default("Who We Are")
+  description String
+  buttonLabel String  @default("Learn More")
+  buttonHref  String  @default("/about")
+  image       String?
+  visible     Boolean @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model WhyChooseItem {
+  id          String  @id @default(cuid())
+  icon        String
+  title       String
+  description String
+  order       Int     @default(0)
+  visible     Boolean @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model ProcessStep {
+  id          String  @id @default(cuid())
+  step        Int
+  title       String
+  description String
+  icon        String
+  visible     Boolean @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model CallToAction {
+  id            String  @id @default(cuid())
+  section       String  @unique
+  heading       String
+  description   String
+  primaryBtn    String
+  primaryHref   String
+  secondaryBtn  String?
+  secondaryHref String?
+  visible       Boolean @default(true)
+  updatedAt     DateTime @updatedAt
+}
+
+// ============ SERVICES ============
+model Service {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  title       String
+  shortDesc   String
+  description String
+  icon        String
+  image       String?
+  features    String
+  benefits    String
+  price       String?
+  visible     Boolean @default(true)
+  order       Int     @default(0)
+  updatedAt   DateTime @updatedAt
+}
+
+// ============ PORTFOLIO ============
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String
+  longDesc     String?
+  image        String?
+  gallery      String?
+  clientName   String?
+  clientId     String?
+  category     String?
+  technologies String?
+  completionDate DateTime?
+  projectUrl   String?
+  status       String   @default("draft")
+  featured     Boolean  @default(false)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Client       Client?  @relation(fields: [clientId], references: [id])
+}
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  website     String?
+  visible     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  projects    Project[]
+  testimonials Testimonial[]
+}
+
+model Testimonial {
+  id         String   @id @default(cuid())
+  name       String
+  role       String?
+  company    String?
+  photo      String?
+  rating     Int      @default(5)
+  content     String
+  clientId   String?
+  visible    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Client     Client?  @relation(fields: [clientId], references: [id])
+}
+
+// ============ CONTACT / ORDERS ============
+model ContactMessage {
+  id         String   @id @default(cuid())
+  fullName   String
+  phone      String
+  email      String
+  service    String?
+  subject    String
+  message    String
+  status     String   @default("new")
+  adminNotes String?
+  ip         String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ProjectOrder {
+  id            String   @id @default(cuid())
+  reference     String   @unique
+  fullName      String
+  businessName String?
+  phone         String
+  email         String
+  country       String?
+  service       String
+  description   String
+  budget        String?
+  completionTime String?
+  requirements  String?
+  status        String   @default("pending")
+  adminNotes    String?
+  ip            String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// ============ MEDIA LIBRARY ============
+model MediaAsset {
+  id        String   @id @default(cuid())
+  name      String
+  url       String   // Vercel Blob URL in production, /uploads/x.jpg in dev
+  type      String   // image | video | document
+  mime      String
+  size      Int?
+  alt       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============ SOCIAL LINKS ============
+model SocialLink {
+  id        String  @id @default(cuid())
+  platform  String  @unique
+  url       String
+  icon      String
+  visible   Boolean @default(true)
+  order     Int     @default(0)
+  updatedAt DateTime @updatedAt
+}
+
+// ============ FOOTER ============
+model FooterLink {
+  id        String  @id @default(cuid())
+  section   String
+  label     String
+  href      String
+  order     Int     @default(0)
+  visible   Boolean @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+// ============ ACTIVITY LOG ============
+model ActivityLog {
+  id        String   @id @default(cuid())
+  action    String
+  entity    String
+  entityId  String?
+  detail    String?
+  adminId   String?
+  createdAt DateTime @default(now())
+  AdminUser AdminUser? @relation(fields: [adminId], references: [id])
+}
+
+// ============ EMAIL LOG ============
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  body      String
+  type      String
+  refId     String?
+  status    String   @default("queued")
+  error     String?
+  createdAt DateTime @default(now())
+}
