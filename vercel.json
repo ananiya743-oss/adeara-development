@@ -2,6 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "buildCommand": "bun run build",
-  "installCommand": "bun install",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet . || true"
+  "installCommand": "bun install"
 }
