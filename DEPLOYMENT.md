@@ -204,40 +204,47 @@ Contact form submissions and project orders trigger emails to `ananiya743@gmail.
 
 ---
 
-## Step 9 — Push the database schema to production
+## Step 9 — Set up the production database (EASY WAY — no Node.js needed)
 
-After the first successful deploy, you need to create the actual tables in your Postgres database. There are two ways:
+After your first successful deploy, you need to create the database tables and seed the default content. There are two ways.
 
-### Option A: Use Vercel's CLI (recommended)
+### Option A — Use the auto-setup page (recommended — no local tools needed)
+
+This is the fastest path. You don't need to install Node.js or run any commands on your computer.
+
+1. Make sure your Vercel environment variables are set correctly (especially `DATABASE_URL`, `DATABASE_PROVIDER=postgresql`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `SEED_ADMIN_EMAIL`, `SEED_ADMIN_PASSWORD`, `SEED_ADMIN_NAME`).
+2. Visit this URL in your browser:
+   ```
+   https://your-project-name.vercel.app/setup
+   ```
+   (Replace `your-project-name` with your actual Vercel project name, e.g. `adeara-development-41zb`.)
+3. You'll see a setup page that says "Database is not yet set up." Click the **"Set Up Database Now"** button.
+4. Wait about 10 seconds. The page will show live progress as it creates all 19 tables and seeds the default content (navigation, hero, services, why-choose, process steps, CTAs, social links, footer links, and the admin user).
+5. When it says "Setup complete!", click **Go to Admin Dashboard** to sign in.
+
+**The setup is idempotent** — safe to run multiple times. If the database is already set up, it will tell you and won't overwrite your data.
+
+### Option B — Use the Vercel CLI (advanced — requires Node.js locally)
+
+If you'd rather use the CLI (e.g. for automation or if the /setup page fails):
 
 1. Install the Vercel CLI: `npm i -g vercel`
 2. Link your project locally:
    ```bash
    cd adeara-development
    vercel link
-   # Select your team and the adeara-development project
    ```
 3. Pull the production environment variables:
    ```bash
    vercel env pull .env.production
    ```
-   This downloads all the env vars from Vercel into a local `.env.production` file (don't commit this — it's gitignored).
-4. Push the schema:
+4. Push the schema and seed:
    ```bash
-   # Load production env vars temporarily
    export $(cat .env.production | grep -v '^#' | xargs)
    bun run db:push
+   bun run seed
    ```
-   This creates all 19 tables in your Postgres database.
-5. Seed the initial content + admin:
-   ```bash
-   bun run scripts/seed.ts
-   ```
-   This creates the initial admin user (using `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` from your Vercel env vars) and the default site content (navigation, hero, services, etc.).
-
-### Option B: Run via Vercel's "Run Command" feature
-
-Vercel has a feature called "Run Command" (currently in beta, available on Pro plan) that lets you run a one-off command against your production environment. You can use it to run `bun run db:push && bun run seed`. For free-tier users, Option A is recommended.
+   This creates all 19 tables in your Postgres database and seeds the initial admin user + default content.
 
 ---
 
