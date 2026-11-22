@@ -5,8 +5,20 @@ import { FadeUp, StaggerGroup, StaggerItem } from "@/components/site/motion";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { CheckCircle2, Check, ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Services — Website, Mobile Apps & Digital Marketing",
+  description: "Professional website development, mobile app development, and digital marketing services in Ethiopia. Build your digital presence with ADEARA.",
+  alternates: { canonical: "/services" },
+  openGraph: {
+    title: "ADEARA Services — Website, Mobile Apps & Digital Marketing",
+    description: "Professional digital services in Ethiopia. Websites, mobile apps, marketing.",
+    type: "website",
+  },
+};
 
 function Icon({ name, className }: { name: string; className?: string }) {
   const Cmp = (Icons as any)[name] as LucideIcon | undefined;

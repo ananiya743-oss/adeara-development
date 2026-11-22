@@ -6,8 +6,20 @@ import { FadeUp, StaggerGroup, StaggerItem } from "@/components/site/motion";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Rocket, ArrowRight, ArrowUpRight, Star, FolderKanban, Sparkles } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Our Work — Portfolio & Projects",
+  description: "View ADEARA DEVELOPMENT's portfolio of digital projects. Modern websites, mobile apps, and digital marketing work in Ethiopia and beyond.",
+  alternates: { canonical: "/our-work" },
+  openGraph: {
+    title: "ADEARA Portfolio — Our Work",
+    description: "Digital projects built by ADEARA DEVELOPMENT in Ethiopia.",
+    type: "website",
+  },
+};
 
 export default async function OurWorkPage() {
   const projects = await db.project.findMany({

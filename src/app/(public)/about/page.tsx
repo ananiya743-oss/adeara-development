@@ -3,8 +3,20 @@ import { db } from "@/lib/db";
 import { CTABanner, Eyebrow } from "@/components/site/section-utils";
 import { FadeUp, StaggerGroup, StaggerItem, Counter } from "@/components/site/motion";
 import { CheckCircle2, Target, Eye, Sparkles, Code2, Smartphone, Megaphone, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "About Us — Ethiopian Technology Company",
+  description: "ADEARA DEVELOPMENT is an Ethiopian technology company building modern websites, mobile apps, and digital marketing. Our mission, vision, and values.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About ADEARA DEVELOPMENT",
+    description: "Ethiopian technology company. Modern websites, mobile apps, and digital marketing.",
+    type: "website",
+  },
+};
 
 export default async function AboutPage() {
   const s = await getSettings();

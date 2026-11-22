@@ -3,8 +3,20 @@ import { getSettings } from "@/lib/site-config";
 import { OrderForm } from "@/components/site/order-form";
 import { FadeUp } from "@/components/site/motion";
 import { Phone, MapPin, Shield, CheckCircle2, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Start Your Project — Request a Quote",
+  description: "Request a website, mobile app, or digital marketing project with ADEARA DEVELOPMENT. Get a clear plan, timeline, and quote within 1 business day.",
+  alternates: { canonical: "/order" },
+  openGraph: {
+    title: "Start Your Project with ADEARA",
+    description: "Request a digital project quote — websites, mobile apps, marketing.",
+    type: "website",
+  },
+};
 
 export default async function OrderPage() {
   const s = await getSettings();

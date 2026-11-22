@@ -329,10 +329,11 @@ export async function POST(req: NextRequest) {
     // === Step 12: Social links ===
     log.push("Seeding social links...");
     const socials = [
-      { platform: "Facebook", url: "#", icon: "Facebook" },
-      { platform: "Twitter", url: "#", icon: "Twitter" },
-      { platform: "Instagram", url: "#", icon: "Instagram" },
-      { platform: "LinkedIn", url: "#", icon: "Linkedin" },
+      { platform: "Facebook", url: "https://www.facebook.com/adearadevelopment", icon: "Facebook" },
+      { platform: "Twitter", url: "https://www.twitter.com/adearadev", icon: "Twitter" },
+      { platform: "Instagram", url: "https://www.instagram.com/adearadevelopment", icon: "Instagram" },
+      { platform: "LinkedIn", url: "https://www.linkedin.com/company/adeara-development", icon: "Linkedin" },
+      { platform: "YouTube", url: "https://www.youtube.com/@adearadevelopment", icon: "Youtube" },
     ];
     for (let i = 0; i < socials.length; i++) {
       const s = socials[i];

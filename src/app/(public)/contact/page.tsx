@@ -3,8 +3,20 @@ import { getSettings } from "@/lib/site-config";
 import { ContactForm } from "@/components/site/contact-form";
 import { FadeUp } from "@/components/site/motion";
 import { Phone, MapPin, Send, Sparkles, ArrowUpRight } from "lucide-react";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Contact — Get in Touch with ADEARA",
+  description: "Contact ADEARA DEVELOPMENT in Ethiopia. Call +251911163392 or send a message. We build modern websites, mobile apps, and digital marketing.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact ADEARA DEVELOPMENT",
+    description: "Get in touch for websites, mobile apps, and digital marketing in Ethiopia.",
+    type: "website",
+  },
+};
 
 export default async function ContactPage() {
   const s = await getSettings();

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getPublicSiteData, getSettings } from "@/lib/site-config";
 import { EyebrowLight, SectionHeading, CTABanner } from "@/components/site/section-utils";
@@ -9,6 +10,51 @@ import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "ADEARA DEVELOPMENT — Website, Mobile Apps & Digital Marketing",
+  description: "Ethiopian technology company building modern websites, mobile apps, and digital marketing solutions. Build your online presence with ADEARA.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "ADEARA DEVELOPMENT — Build Your Online Presence",
+    description: "Modern websites, mobile apps, and digital marketing in Ethiopia. Turning ideas into digital excellence.",
+    type: "website",
+    locale: "en_US",
+    images: ["/adeara-logo.jpg"],
+  },
+};
+
+// Organization schema specific to home page (enhances rich results)
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: "ADEARA DEVELOPMENT",
+  image: "/adeara-logo.jpg",
+  url: "/",
+  telephone: "+251911163392",
+  priceRange: "$$",
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "ET",
+    addressRegion: "Addis Ababa",
+  },
+  areaServed: ["Ethiopia", "Global"],
+  serviceType: ["Web Development", "Mobile App Development", "Digital Marketing"],
+  makesOffer: [
+    {
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: "Website Development" },
+    },
+    {
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: "Mobile Application Development" },
+    },
+    {
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: "Digital Marketing" },
+    },
+  ],
+};
 
 function Icon({ name, className }: { name: string; className?: string }) {
   const Cmp = (Icons as any)[name] as LucideIcon | undefined;
@@ -27,6 +73,11 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Structured data — ProfessionalService */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
+      />
       {/* ===== HERO ===== */}
       {hero?.visible !== false && hero ? (
         <section className="relative overflow-hidden mesh-brand text-white min-h-[92vh] flex items-center">

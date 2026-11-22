@@ -297,16 +297,21 @@ async function main() {
 
   // ---------- Social links ----------
   const socials = [
-    { platform: "Facebook", url: "#", icon: "Facebook" },
-    { platform: "Twitter", url: "#", icon: "Twitter" },
-    { platform: "Instagram", url: "#", icon: "Instagram" },
-    { platform: "LinkedIn", url: "#", icon: "Linkedin" },
+    { platform: "Facebook", url: "https://www.facebook.com/adearadevelopment", icon: "Facebook" },
+    { platform: "Twitter", url: "https://www.twitter.com/adearadev", icon: "Twitter" },
+    { platform: "Instagram", url: "https://www.instagram.com/adearadevelopment", icon: "Instagram" },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/company/adeara-development", icon: "Linkedin" },
   ];
   for (let i = 0; i < socials.length; i++) {
     const s = socials[i];
     const existing = await db.socialLink.findUnique({ where: { platform: s.platform } });
     if (!existing) {
       await db.socialLink.create({ data: { platform: s.platform, url: s.url, icon: s.icon, visible: true, order: i } });
+    } else {
+      // Update URL if it was a placeholder
+      if (existing.url === "#" || existing.url === "") {
+        await db.socialLink.update({ where: { id: existing.id }, data: { url: s.url } });
+      }
     }
   }
   console.log("✓ Social links");
